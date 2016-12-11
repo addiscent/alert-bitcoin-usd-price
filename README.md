@@ -1,19 +1,19 @@
 # alert-bitcoin-usd-price
-This Bash script sends notification if the price of Bitcoin falls below a user specified set price.  When run periodically as a cron job, it may serve as a "buy" alert.
+This Bash script sends notification if the price of Bitcoin falls below a user specified set price.  When run periodically as a _cron_ job, it may serve as a "buy" alert.
 
-This program fetches the current BID price of Bitstamp "btcusd" from a ticker, and compares it against an alarm SET value.  If the BID Bitstamp "btcusd" price is lower than the alarm SET value, notification is performed as follows:
+This program fetches the current _BID_ price of Bitstamp "btcusd" from a ticker and compares it against an alarm _SET_ value.  If the _BID_ Bitstamp "btcusd" price is lower than the alarm _SET_ value, notification is performed as follows:
 
-  * Bitcoin BID price and alert SET value are output to STDOUT
-  * An alert notification is sent to the GUI
-  * Email notification is sent if enabled
+  1. Bitcoin _BID_ price and alert _SET_ value are output to _STDOUT_
+  2. An alert notification is sent to the _GUI_
+  3. Email notification is sent if enabled
 
-The source of Bitcoin price data is https://www.bitstamp.net.
+The source of Bitcoin price data is _https://www.bitstamp.net_.
 
 ### Installation
-After cloning this project or downloading/unzipping the project zip file, copy "alert-btcusd-price.sh" into a directory in which the user has permissions, and ensure the file permission is set as "executable".
+After cloning this project or downloading/unzipping the project zip file, copy _alert-btcusd-price.sh_ into a directory in which the user has permissions, and ensure the file permission is set as _executable_.
 
 ### Basic Command Line Syntax
-The alarm price SET point in this example below is specified as "789".  Change this value to set the price at which notification is sent.  If email notification is desired, set the user's email address in place of the email address in the example below.  If no email notification is desired, remove the email address "example@example.com".  If "example@example.com" is not removed from the example below, the host will waste CPU and IO cycles pointlessly attempting to send unnecessary email, and email notifications of delivery failures may arrive in the host admin's mailbox.
+The alarm price _SET_ point in this example below is specified as _789_.  Change this value to set the price at which notification is performed.  If email notification is desired, set the user's email address in place of the email address in the example below.  If no email notification is desired, remove the email address "example@example.com".  If "example@example.com" is not removed from the example below, the host will waste CPU and IO cycles pointlessly attempting to send unnecessary email, and email notifications of delivery failures may arrive in the host admin's mailbox.
 
         alert-btcusd-price.sh 789 example@example.com
 
@@ -23,5 +23,5 @@ If the user wishes to have the price checked regularly by cron, add the line of 
         * * * * * /home/user/bin/alert-btcusd-price.sh 789 example@example.com >/dev/null 2>&1
 
 #### Important
-In order for email notifications to work correctly, the admin must ensure the "mail" utility is installed and configured properly.
+In order for email notifications to work correctly, the admin must ensure the _mail_ utility is installed and configured properly.
 
