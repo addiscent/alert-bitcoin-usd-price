@@ -3,11 +3,9 @@ This Bash script sends notification if the price of Bitcoin falls below a user s
 
 This program fetches the current BID price of Bitstamp "btcusd" from a ticker, and compares it against an alarm SET value.  If the BID Bitstamp "btcusd" price is lower than the alarm SET value, notification is performed as follows:
 
-  Bitcoin BID price and alert SET value are output to STDOUT
-
-  An alert notification is sent to the GUI
-
-  Email notification is sent if enabled
+  * Bitcoin BID price and alert SET value are output to STDOUT
+  * An alert notification is sent to the GUI
+  * Email notification is sent if enabled
 
 The source of Bitcoin price data is https://www.bitstamp.net.
 
