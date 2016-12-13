@@ -29,12 +29,29 @@ bid=$(curl https://www.bitstamp.net/api/v2/ticker/btcusd/ | awk -F ': "' '{print
 echo "BID price is    : \$$bid"
 echo "Alarm SET price is : \$$1"
 
+# https://www.bitstamp.net service could have been unavailable during fetch.
+# Detect and exit if suspect
+if [ "$bid" \< "1" ] ; then
+  if [ $# = 2 ] ; then
+  mail -s 'Bitcoin Price Alert (Quasimodo)' "$2" << EOF
+From Bitcoin Price Monitor - Notification :
+
+   Suspect data received from :
+     https://www.bitstamp.net/api/v2/ticker/btcusd/
+   Service may be unavailable.
+   Bitcoin BID price : \$$bid
+EOF
+  fi
+  echo "Suspect data received, service may be unavailable, exiting"
+  exit 0
+fi
+
 # test for price alarm trigger and do notification if necessary
 if [ "$bid" \< "$1" ] ; then
   DISPLAY=:0 notify-send "Bitcoin Price Notification" "Bitcoin BID price \$$bid\nis below SET Alarm \$$1" 
   if [ $# = 2 ] ; then
     mail -s 'Bitcoin Price Alert (Quasimodo)' "$2" << EOF
-From Bitcoin Monitor - Notification :
+From Bitcoin Price Monitor - Notification :
 
    Bitcoin BID price \$$bid,
    is below alert SET price \$$1
