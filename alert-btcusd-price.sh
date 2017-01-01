@@ -19,7 +19,9 @@ if [ $# -lt 1 ]; then
   echo "Example :  alert-btcusd-price.sh  789    example@example.com"
   echo "Alarm \"set\" value required, exiting, nothing done"
   exit 1
-fi 
+fi
+
+#set -x
 
 # fetch the json block containing current bitstamp btcusd prices and
 # extract "bid" price
@@ -47,7 +49,10 @@ EOF
 fi
 
 # test for price alarm trigger and do notification if necessary
-if [ "$bid" \< "$1" ] ; then
+# use calculator (bc) for floating point compare test.
+true="1"
+
+if [ $(echo "$bid < $1" | bc) == $true ] ; then
   DISPLAY=:0 notify-send "Bitcoin Price Notification" "Bitcoin BID price \$$bid\nis below SET Alarm \$$1" 
   if [ $# = 2 ] ; then
     mail -s 'Bitcoin Price Alert (Quasimodo)' "$2" << EOF
@@ -58,6 +63,8 @@ From Bitcoin Price Monitor - Notification :
 EOF
   fi
 fi
+
+#set +x
 
 exit 0
 
