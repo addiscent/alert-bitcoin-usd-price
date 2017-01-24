@@ -16,24 +16,24 @@ The source of Bitcoin price data is _https://www.bitstamp.net_.
 After cloning this project or downloading/unzipping the project zip file, copy _alert-btcusd-price.sh_ into a directory in which the user has permissions, and ensure the file permission is set as _executable_.
 
 ### Basic Command Line Syntax
-The condition-price in this example below is specified as _'<789.00'_.  Thise means send a notification when the BTC price falls below $789.99.  Change this value to set the price at which notification is performed.  If email notification is desired, set the user's email address in place of the email address in the example below.  If no email notification is desired, remove the email address "example@example.com".  If "example@example.com" is not removed from the example below, the host will waste CPU and IO cycles pointlessly attempting to send unnecessary email, and email notifications of delivery failures may arrive in the host admin's mailbox.
+The condition-price in this example below is specified as _'<789.99'_.  This condition specifies that the program send a notification when the BTC price falls below _$789.99_.  Change this value to set the price at which notification is to be performed.  If email notification is desired, set the user's email address in place of the email address in the example below.  If no email notification is desired, remove the email address "example@example.com".  If "example@example.com" is not removed from the example below, the host will waste CPU and IO cycles pointlessly attempting to send unnecessary email, and email notifications of delivery failures may arrive in the host admin's mailbox.
 
         alert-btcusd-price.sh '<789.99' example@example.com
 
-Alternately, the program may be used to notify the user if the BTC price rises above a specified value.  The condition-price in this example below is specified as _'>1234.99'_.  Thise means send a notification when the BTC price rises above $1200.  Change this value to set the price at which notification is performed.
+Alternately, the program may be used to notify the user if the BTC price rises above a specified value.  The condition-price in this example below is specified as _'>1234.99'_.  This condition specifies that the program send a notification when the BTC price rises above _$1234.99_.  Change this value to set the price at which notification is to be performed.
 
         alert-btcusd-price.sh '>1234.99' example@example.com
 
 Optionally, numerals after the decimal may be omitted, e.g., values of '<789' or '>1234' are accepted.
 
-Note that the single quotes surrounding the condtion-price argument are required.  If the single quotes are omitted the program may behave in and undesireable manner.
+The single quotes surrounding the condtion-price argument are required.  If the single quotes are omitted the program may behave in an undesireable manner.
         
 ### Used As A Buy Or Sell Alert
-If the user wishes to have the price checked regularly by cron, add the line of code shown below to the user's crontab .  The example line below causes the script to be executed once per 10 minutes.  Modify the example below accordingly if the script should be run more or less often.  The example code shown below assumes the user has alert-btcusd-price.sh stored in a directory named "bin", in the "user" home directory. If stored in some other path, adjust this example accordingly.  
+If the user wishes to have the price checked regularly by _cron_, add the line of code shown next below to the user's crontab.  The example line below causes the script to be executed once per 10 minutes.  Modify the example below accordingly if the script should be run more or less often.  The example code shown below assumes the user has _alert-btcusd-price.sh_ stored in a directory named "bin", in the "user" home directory. If stored in some other path, adjust this example accordingly.  
 
         */10 * * * * /home/user/bin/alert-btcusd-price.sh '<789.99' example@example.com >/dev/null 2>&1
 
-If the user wishes to have a notification message sent to an AWS SNS Topic, the following environment variable must be defined *in the crontab file*, as given in this example :
+If the user wishes to have a notification message sent to an _AWS SNS Topic_, the following environment variable must be defined *in the crontab file*, as given in this example :
 
         BTCUSD_PRICE_ALERT_AWS_SNS_TOPIC="arn:aws:sns:us-west-2:NNNNNNNNNNNN:bitcoin-usd-price-alert"
 
