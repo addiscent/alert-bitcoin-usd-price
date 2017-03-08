@@ -1,4 +1,8 @@
 #!/bin/bash
+# alert-btcusd-price.sh
+# rex addiscentis 2017/03/08
+# https://github.com/addiscent
+
 # This program compares the price of Bitstamp "btcusd" against an alert
 # condition-price.  An example condition-price is '<789.00' or '>1100.00'.
 # If the Bitstamp "btcusd" price satisfies the alert condition, the BTC price
@@ -10,9 +14,14 @@
 #
 # This script has been tested only on Ubuntu 14.10 DESKTOP version.
 #
-# rex addiscentis 2017/01/23
-# Apache 2.0 License
+# Usage example :
+#   /home/user/bin/alert-btcusd-price.sh '<1200.00' raddiscentis@addiscent.com
+#
+# rex addiscentis 2017/03/08
 # https://github.com/addiscent
+#
+# Apache 2.0 License
+#
 
 # in case of multiple hosts sending notifications,
 # set sending host name here
@@ -83,6 +92,11 @@ function notify_btc_price () {
   if [ $(echo "$btc_price$COMPARE_PRICE" | bc) == $TRUE ] ; then
     # notify on GUI desktop
     DISPLAY=:0 notify-send "Bitcoin Price Notification" "Bitcoin BTC price \$$btc_price\ntriggers condition-price alert '$COMPARE_PRICE'"
+    # if an AWS SNS topic is defined in a parent ENV variable,
+    # send a notification to it
+    if [ "$BTCUSD_PRICE_ALERT_AWS_SNS_TOPIC." != "." ] ; then
+      aws sns publish --topic-arn "$BTCUSD_PRICE_ALERT_AWS_SNS_TOPIC" --message "Bitcoin BTC price \$$btc_price triggers condition-price alert '$COMPARE_PRICE'" --output json
+    fi
     # if an email address is provided on cmd line, send notification via email
     if [ "$NOTIFY_EMAIL_ADDRESS." != "." ] ; then
     mail -s "'Bitcoin Price Alert ($btcusd_price_hostname)" "$NOTIFY_EMAIL_ADDRESS" << EOF
@@ -91,11 +105,6 @@ From Bitcoin Price Monitor - Notification :
    Bitcoin BTC price \$$btc_price,
    triggers condition-price alert "$COMPARE_PRICE"
 EOF
-    fi
-    # if an AWS SNS topic is defined in a parent ENV variable,
-    # send a notification to it
-    if [ "$BTCUSD_PRICE_ALERT_AWS_SNS_TOPIC." != "." ] ; then
-      aws sns publish --topic-arn "$BTCUSD_PRICE_ALERT_AWS_SNS_TOPIC" --message "Bitcoin BTC price \$$btc_price triggers condition-price alert '$COMPARE_PRICE'" --output json
     fi
   fi
 }
@@ -109,7 +118,7 @@ EOF
 
 # must specify an alert "set" condition-price on command line.
 # return val of func is in script variable of same name as func
-validate_usage 
+validate_usage
 if [ "$validate_usage" == "$ERR_USAGE"  ]; then exit $ERR_USAGE ; fi
 
 # fetch the json block containing current bitstamp btcusd prices and
@@ -134,4 +143,3 @@ notify_btc_price
 exit 0
 
 ################################# End MAIN  ##################################
-
